@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Dashboard - SkillGap</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="dashboard-header">
+
+        <div class="logo">
+            SkillGap
+        </div>
+
+        <button onclick="logout()">Logout</button>
+
+    </header>
+
+
+    <main class="student-dashboard">
+
+        <h1>Student Dashboard</h1>
+
+        <p class="welcome-text">
+            Welcome to your SkillGap profile
+        </p>
+
+
+        <!-- Profile -->
+
+        <section class="student-profile">
+
+            <h2>My Profile</h2>
+
+            <div class="profile-grid">
+            
+
+                <div>
+                    <strong>Name</strong>
+                    <p id="studentName">Test Student</p>
+                </div>
+
+                <div>
+                    <strong>Email</strong>
+                    <p id="studentEmail">test2@gmail.com</p>
+                </div>
+
+                <div>
+                    <strong>District</strong>
+                    <p id="studentDistrict">Meerut</p>
+                </div>
+
+                <div>
+                    <strong>Training</strong>
+                    <p id="studentTraining">Web Development</p>
+                </div>
+
+            </div>
+        <div class="profile-update">
+
+    <h3>Update Profile</h3>
+
+    <input
+        type="text"
+        id="districtInput"
+        placeholder="Enter district"
+    >
+
+    <input
+        type="text"
+        id="trainingInput"
+        placeholder="Enter training/course"
+    >
+
+    <button onclick="updateProfile()">
+        Update Profile
+    </button>
+
+</div>   
+
+        </section>
+
+
+        <!-- Training Status -->
+
+        <section class="student-section">
+
+            <h2>Training Status</h2>
+
+            <div class="status-card">
+
+                <h3>Web Development</h3>
+
+                <p>
+    Status:
+    <strong id="trainingStatus">In Progress</strong>
+</p>
+
+<p>
+    Certification:
+    <strong id="certificationStatus">Not Certified</strong>
+</p>
+
+            </div>
+
+        </section>
+
+
+        <!-- Employment -->
+
+        <section class="student-section">
+
+            <h2>Employment Status</h2>
+
+            <select id="employmentStatus">
+
+                <option value="not-employed">
+                    Not Employed
+                </option>
+
+                <option value="employed">
+                    Employed
+                </option>
+
+                <option value="self-employed">
+                    Self Employed
+                </option>
+
+                <option value="apprenticeship">
+                    Apprenticeship
+                </option>
+
+            </select>
+
+            <button onclick="updateEmployment()">
+                Update Status
+            </button>
+
+        </section>
+
+
+        <!-- Skills -->
+
+        <section class="student-section">
+
+    <h2>My Skills</h2>
+
+    <input
+        type="text"
+        id="skillsInput"
+        placeholder="Enter your skills (e.g. HTML, CSS, JavaScript)"
+    >
+
+    <button onclick="updateSkills()">
+        Save Skills
+    </button>
+
+</section>
+
+    </main>
+
+
+    <script>
+
+async function loadStudentProfile() {
+
+    const studentId = sessionStorage.getItem("student_id");
+
+    if (!studentId) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `http://127.0.0.1:8000/students/${studentId}`
+        );
+
+        if (!response.ok) {
+            throw new Error("Student data not found");
+        }
+
+        const student = await response.json();
+
+        document.getElementById("studentName").textContent = student.name;
+        document.getElementById("studentEmail").textContent = student.email;
+        document.getElementById("studentDistrict").textContent = student.district;
+        document.getElementById("studentTraining").textContent = student.training;
+        document.getElementById("employmentStatus").value = student.employment_status;
+        document.getElementById("skillsInput").value = student.skills || "";
+        document.getElementById("trainingStatus").textContent =
+    student.training_status || "In Progress";
+
+document.getElementById("certificationStatus").textContent =
+    student.certification_status || "Not Certified";
+
+    } catch (error) {
+
+        console.error(error);
+        alert("Student data load nahi ho pa raha.");
+
+    }
+}
+
+async function updateEmployment() {
+    const studentId = sessionStorage.getItem("student_id");
+    const status = document.getElementById("employmentStatus").value;
+
+    try {
+        const response = await fetch(
+            `http://127.0.0.1:8000/students/${studentId}/employment`,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    employment_status: status
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || "Update failed");
+        }
+
+        alert(data.message);
+
+    } catch (error) {
+        console.error(error);
+        alert("Employment status update nahi ho pa raha.");
+    }
+}
+
+
+async function updateSkills() {
+
+    const studentId = sessionStorage.getItem("student_id");
+
+    const skills =
+        document.getElementById("skillsInput").value.trim();
+
+    if (!studentId) {
+        alert("Please login again.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    if (!skills) {
+        alert("Please enter your skills.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `http://127.0.0.1:8000/students/${studentId}/skills`,
+            {
+                method: "PUT",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    skills: skills
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (response.ok) {
+
+            alert("Skills updated successfully!");
+
+        } else {
+
+            alert(data.detail || "Skills update failed.");
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
+        alert("Backend se connect nahi ho pa raha.");
+
+    }
+}
+
+async function updateProfile() {
+
+    const studentId = sessionStorage.getItem("student_id");
+
+    const district =
+        document.getElementById("districtInput").value.trim();
+
+    const training =
+        document.getElementById("trainingInput").value.trim();
+
+    if (!studentId) {
+        alert("Please login again.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    if (!district || !training) {
+        alert("Please enter district and training.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `http://127.0.0.1:8000/students/${studentId}/profile`,
+            {
+                method: "PUT",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    district: district,
+                    training: training
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (response.ok) {
+
+            alert("Profile updated successfully!");
+
+            document.getElementById("studentDistrict").textContent = district;
+            document.getElementById("studentTraining").textContent = training;
+
+        } else {
+
+            alert(data.detail || "Profile update failed.");
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
+        alert("Backend se connect nahi ho pa raha.");
+
+    }
+}
+
+
+function logout() {
+
+    sessionStorage.clear();
+    window.location.href = "login.html";
+
+}
+
+
+loadStudentProfile();
+
+</script>
+    
+
+</body>
+</html>

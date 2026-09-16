@@ -1,0 +1,26 @@
+[
+    {
+        "sector": "Management",
+        "candidate_aspiration": 19,
+        "industry_size": "N/A",
+        "number_of_organizations": "N/A",
+        "dsdp_training": 120,
+        "mssds_skilling_2022_23": 111
+    },
+    {
+        "sector": "Power",
+        "candidate_aspiration": 19,
+        "industry_size": "N/A",
+        "number_of_organizations": "N/A",
+        "dsdp_training": 120,
+        "mssds_skilling_2022_23": 111
+    },
+    {
+        "sector": "Tourism & Hospitality",
+        "candidate_aspiration": 26,
+        "industry_size": 8,
+        "number_of_organizations": 1,
+        "dsdp_training": "N/A",
+        "mssds_skilling_2022_23": 270
+    }
+]

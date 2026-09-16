@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillGap - Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="login-box">
+            <h1>SkillGap</h1>
+            <p>Skill & Employment Tracking Platform</p>
+
+            <h2>Login</h2>
+
+            <label>Select User Type</label>
+
+            <select id="userType">
+                <option value="student">Student / Trainee</option>
+                <option value="institute">Training Institute</option>
+                <option value="government">Government Officer</option>
+            </select>
+
+            <input type="email" placeholder="Email">
+
+            <input type="password" placeholder="Password">
+
+            <button onclick="login()">Login</button>
+
+            <p class="register-text">
+                New Student? <a href="register.html">Create Account</a>
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+    async function login() {
+
+        const userType = document.getElementById("userType").value;
+
+        const email = document.querySelector('input[type="email"]').value;
+        const password = document.querySelector('input[type="password"]').value;
+
+        // Abhi sirf Student login connect kar rahe hain
+        if (userType === "officer") {
+    if (email === "officer@maharashtra.gov.in" && password === "officer123") {
+        sessionStorage.setItem("officer_logged_in", "true");
+        window.location.href = "officer-dashboard.html";
+        return;
+    } else {
+        alert("Invalid Government Officer credentials.");
+        return;
+    }
+}
+
+if (userType === "government") {
+    if (email === "officer@maharashtra.gov.in" && password === "officer123") {
+        sessionStorage.setItem("officer_logged_in", "true");
+        window.location.href = "officer-dashboard.html";
+        return;
+    } else {
+        alert("Invalid Government Officer credentials.");
+        return;
+    }
+}
+
+if (userType === "government") {
+    if (email === "officer@maharashtra.gov.in" && password === "officer123") {
+        sessionStorage.setItem("officer_logged_in", "true");
+        window.location.href = "officer-dashboard.html";
+        return;
+    } else {
+        alert("Invalid Government Officer credentials.");
+        return;
+    }
+}
+
+if (userType !== "student") {
+    alert("Abhi sirf Student login available hai.");
+    return;
+}
+
+try {
+            const response = await fetch("http://127.0.0.1:8000/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+
+                sessionStorage.setItem("student_id", data.student_id);
+                sessionStorage.setItem("student_name", data.name);
+
+                // Student dashboard par bhejna
+                window.location.href = "student-dashboard.html";
+
+            } else {
+
+                alert(data.detail);
+            }
+
+        } catch (error) {
+
+            alert("Backend server se connection nahi ho pa raha.");
+        }
+    }
+</script>
+
+</body>
+</html>

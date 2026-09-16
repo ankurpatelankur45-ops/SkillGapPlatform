@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillGap - Student Registration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="login-box">
+            <h1>SkillGap</h1>
+            <p>Create Student Account</p>
+
+            <h2>Register</h2>
+
+            <input type="text" placeholder="Full Name">
+
+            <input type="email" placeholder="Email">
+
+            <input type="password" placeholder="Create Password">
+
+            <input type="text" placeholder="District">
+
+            <input type="text" placeholder="Training / Course">
+
+            <button onclick="registerStudent()">Create Account</button>
+
+            <p class="register-text">
+                Already have an account?
+                <a href="login.html">Login</a>
+            </p>
+        </div>
+
+    </div>
+
+   <script>
+    async function registerStudent() {
+
+        const name = document.querySelector('input[placeholder="Full Name"]').value;
+        const email = document.querySelector('input[placeholder="Email"]').value;
+        const password = document.querySelector('input[placeholder="Create Password"]').value;
+        const district = document.querySelector('input[placeholder="District"]').value;
+        const training = document.querySelector('input[placeholder="Training / Course"]').value;
+
+        const response = await fetch("http://127.0.0.1:8000/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                password: password,
+                district: district,
+                training: training
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert("Account created successfully!");
+            window.location.href = "login.html";
+        } else {
+            alert(data.detail);
+        }
+    }
+</script>
+
+</body>
+</html>

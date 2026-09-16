@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Government Officer Dashboard - SkillGap</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <header class="dashboard-header">
+
+        <div class="logo">
+            SkillGap
+        </div>
+
+
+        <button onclick="logoutOfficer()">
+            Logout
+        </button>
+
+    </header>
+
+
+    <main class="student-dashboard">
+
+        <h1>Government Officer Dashboard</h1>
+
+        <p class="welcome-text">
+            Skill Development & Employment Analytics
+        </p>
+
+
+        <section class="student-section">
+
+            <h2>Overview</h2>
+
+            <div class="profile-grid">
+
+                <div>
+                    <strong>Total Students</strong>
+                    <p id="totalStudents">0</p>
+                </div>
+
+                <div>
+                    <strong>Employed</strong>
+                    <p id="employedStudents">0</p>
+                </div>
+
+                <div>
+                    <strong>Not Employed</strong>
+                    <p id="unemployedStudents">0</p>
+                </div>
+
+                <div>
+                    <strong>Employment Rate</strong>
+                    <p id="employmentRate">0%</p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="student-section">
+
+            <h2>Skill Gap Analysis</h2>
+            <section class="student-section">
+    <h2>Skill Recommendations</h2>
+    <p>Identified skill gaps ke basis par recommended skills.</p>
+    <div id="recommendationData">No recommendations available yet.</div>
+</section>
+
+            <p>
+                Government officers can use this section to
+                identify skills that need more training.
+            </p>
+
+            <div id="skillGapData">
+                No data available yet.
+            </div>
+            <div id="governmentSkillGapData">
+    Loading government skill gap data...
+</div>
+<div class="data-source-note">
+    <strong>Government Reference Data</strong><br>
+    This section uses reference data from the
+    Maharashtra Skill Gap Analysis Report 2023.
+    It is used for skill-gap and training analysis.
+</div>
+            <div id="skillRecommendationData">
+    No recommendations available yet.
+</div>
+
+        </section>
+
+
+        <section class="student-section">
+
+            <h2>District-wise Analysis</h2>
+
+            <p>
+                Training and employment outcomes can be
+                compared across districts.
+            </p>
+            <canvas id="districtChart"></canvas>
+
+            <div id="districtData">
+                No data available yet.
+            </div>
+
+        </section>
+        <section class="student-section">
+    <h2>Training-wise Analysis</h2>
+    
+    <p>Training courses ke employment outcomes ko compare karein.</p>
+    <div id="trainingData">No data available yet.</div>
+</section>
+<section class="student-section">
+    <h2>Skilling Impact Summary</h2>
+    <p>
+        Training programs ke employment outcomes aur skill gaps ka overall summary.
+    </p>
+    <div id="impactSummary">
+        Loading impact summary...
+    </div>
+    <div class="data-source-note">
+    <strong>Data Source:</strong>
+    Current records are prototype/demo data for testing.
+    Final deployment will use verified government skill development
+    and employment datasets.
+</div>
+</section>
+
+    </main>
+
+
+    <script>
+        if (sessionStorage.getItem("officer_logged_in") !== "true") {
+    window.location.href = "login.html";
+}
+async function loadOfficerStats() {
+    try {
+        const response = await fetch("http://127.0.0.1:8000/officer/stats");
+
+        if (!response.ok) {
+            throw new Error("Stats load failed");
+        }
+
+        const stats = await response.json();
+
+        document.getElementById("totalStudents").textContent =
+            stats.total_students;
+
+        document.getElementById("employedStudents").textContent =
+            stats.employed_students;
+
+        document.getElementById("unemployedStudents").textContent =
+            stats.unemployed_students;
+
+        document.getElementById("employmentRate").textContent =
+            stats.employment_rate + "%";
+
+    } catch (error) {
+        console.error(error);
+        alert("Officer dashboard backend se connect nahi ho pa raha.");
+    }
+}
+
+loadOfficerStats();
+async function loadTrainingStats() {
+    try {
+        const response = await fetch(
+            "http://127.0.0.1:8000/officer/training-stats"
+        );
+
+        if (!response.ok) {
+            throw new Error("Training data load failed");
+        }
+
+        const data = await response.json();
+
+        const trainingDiv = document.getElementById("trainingData");
+
+        if (data.training_data.length === 0) {
+            trainingDiv.textContent = "No training data available yet.";
+            return;
+        }
+
+        let table = `
+            <table class="district-table">
+                <tr>
+                    <th>Training</th>
+                    <th>Total Students</th>
+                    <th>Employed</th>
+                    <th>Employment Rate</th>
+                </tr>
+        `;
+
+        for (const item of data.training_data) {
+            table += `
+                <tr>
+                    <td>${item.training}</td>
+                    <td>${item.students}</td>
+                    <td>${item.employed}</td>
+                    <td>${item.employment_rate}%</td>
+                </tr>
+            `;
+        }
+
+        table += `</table>`;
+
+        trainingDiv.innerHTML = table;
+
+    } catch (error) {
+        console.error(error);
+        alert("Training data load nahi ho pa raha.");
+    }
+}
+
+loadTrainingStats();
+async function loadImpactSummary() {
+    try {
+        const statsResponse = await fetch(
+            "http://127.0.0.1:8000/officer/stats"
+        );
+
+        const stats = await statsResponse.json();
+
+        const impactDiv = document.getElementById("impactSummary");
+
+        impactDiv.innerHTML = `
+            <p><strong>Total Students:</strong> ${stats.total_students}</p>
+            <p><strong>Employed:</strong> ${stats.employed_students}</p>
+            <p><strong>Not Employed:</strong> ${stats.unemployed_students}</p>
+            <p><strong>Overall Employment Rate:</strong> ${stats.employment_rate}%</p>
+        `;
+
+    } catch (error) {
+        console.error(error);
+        document.getElementById("impactSummary").textContent =
+            "Impact summary load nahi ho pa raha.";
+    }
+}
+
+loadImpactSummary();
+async function loadSkillGaps() {
+    try {
+        const response = await fetch(
+            "http://127.0.0.1:8000/officer/skill-gaps"
+        );
+
+        if (!response.ok) {
+            throw new Error("Skill gap data load failed");
+        }
+
+        const data = await response.json();
+
+        const skillGapDiv = document.getElementById("skillGapData");
+
+        if (Object.keys(data.skill_data).length === 0) {
+            skillGapDiv.textContent = "No skill data available yet.";
+            return;
+        }
+
+        skillGapDiv.innerHTML = "";
+
+        for (const skill in data.skill_data) {
+            const item = document.createElement("p");
+
+            item.textContent =
+                skill + " : " + data.skill_data[skill] + " student(s)";
+
+            skillGapDiv.appendChild(item);
+        }
+
+    } catch (error) {
+        console.error(error);
+        alert("Skill gap data load nahi ho pa raha.");
+    }
+}
+
+loadSkillGaps();
+async function loadRecommendations() {
+    try {
+        const response = await fetch(
+            "http://127.0.0.1:8000/officer/skill-recommendations"
+        );
+
+        if (!response.ok) {
+            throw new Error("Recommendation data load failed");
+        }
+
+        const data = await response.json();
+
+        const recommendationDiv =
+            document.getElementById("recommendationData");
+
+        if (Object.keys(data.recommendations).length === 0) {
+            recommendationDiv.textContent =
+                "No recommendations available yet.";
+            return;
+        }
+
+        recommendationDiv.innerHTML = "";
+
+        for (const skill in data.recommendations) {
+
+            const heading = document.createElement("h3");
+            heading.textContent = skill;
+
+            const list = document.createElement("ul");
+
+            for (const recommendation of data.recommendations[skill]) {
+                const item = document.createElement("li");
+                item.textContent = recommendation;
+                list.appendChild(item);
+            }
+
+            recommendationDiv.appendChild(heading);
+            recommendationDiv.appendChild(list);
+        }
+
+    } catch (error) {
+        console.error(error);
+        alert("Skill recommendations load nahi ho pa rahi.");
+    }
+}
+
+loadRecommendations();
+async function loadDistrictStats() {
+    try {
+        const response = await fetch(
+            "http://127.0.0.1:8000/officer/district-stats"
+        );
+
+        if (!response.ok) {
+            throw new Error("District data load failed");
+        }
+
+        const data = await response.json();
+
+        const districtDiv = document.getElementById("districtData");
+
+        if (data.district_data.length === 0) {
+            districtDiv.textContent = "No district data available yet.";
+            return;
+        }
+
+        let table = `
+            <table class="district-table">
+                <tr>
+                    <th>District</th>
+                    <th>Total Students</th>
+                    <th>Employed</th>
+                    <th>Employment Rate</th>
+                </tr>
+        `;
+
+        for (const item of data.district_data) {
+            table += `
+                <tr>
+                    <td>${item.district}</td>
+                    <td>${item.students}</td>
+                    <td>${item.employed}</td>
+                    <td>${item.employment_rate}%</td>
+                </tr>
+            `;
+        }
+
+        table += `</table>`;
+
+        districtDiv.innerHTML = table;
+
+    } catch (error) {
+        console.error(error);
+        alert("District data load nahi ho pa raha.");
+    }
+}
+
+loadDistrictStats();
+const districtLabels = [];
+const districtRates = [];
+
+async function loadDistrictChart() {
+    try {
+        const response = await fetch(
+            "http://127.0.0.1:8000/officer/district-stats"
+        );
+
+        const data = await response.json();
+
+        for (const item of data.district_data) {
+            districtLabels.push(item.district);
+            districtRates.push(item.employment_rate);
+        }
+
+        new Chart(document.getElementById("districtChart"), {
+            type: "bar",
+            data: {
+                labels: districtLabels,
+                datasets: [{
+                    label: "Employment Rate (%)",
+                    data: districtRates
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+loadDistrictChart();
+
+        function logoutOfficer() {
+
+            sessionStorage.removeItem("officer_logged_in");
+
+            window.location.href = "login.html";
+
+        }
+
+        async function loadGovernmentSkillGaps() {
+    try {
+        const response = await fetch(
+            "http://127.0.0.1:8000/officer/government-skill-gaps"
+        );
+
+        const result = await response.json();
+
+        const governmentDiv =
+            document.getElementById("governmentSkillGapData");
+
+        let html = `
+            <h3>Maharashtra Government Skill Gap Reference Data</h3>
+            <p>
+                <strong>Source:</strong> ${result.source}
+            </p>
+
+            <table class="district-table">
+                <tr>
+                    <th>Sector</th>
+                    <th>Candidate Aspiration</th>
+                    <th>Industry Size</th>
+                    <th>Organizations</th>
+                    <th>DSDP Training</th>
+                    <th>MSSDS Skilling 2022-23</th>
+                </tr>
+        `;
+
+        result.data.forEach(item => {
+            html += `
+                <tr>
+                    <td>${item.sector}</td>
+                    <td>${item.candidate_aspiration}</td>
+                    <td>${item.industry_size}</td>
+                    <td>${item.number_of_organizations}</td>
+                    <td>${item.dsdp_training}</td>
+                    <td>${item.mssds_skilling_2022_23}</td>
+                </tr>
+            `;
+        });
+
+        html += `</table>`;
+
+        governmentDiv.innerHTML = html;
+
+    } catch (error) {
+        console.error(error);
+
+        document.getElementById(
+            "governmentSkillGapData"
+        ).textContent = "Government data load nahi ho pa raha.";
+    }
+}
+
+loadGovernmentSkillGaps();
+
+    </script>
+
+</body>
+
+</html>
