@@ -179,7 +179,7 @@ async function loadStudentProfile() {
     try {
 
         const response = await fetch(
-            `http://127.0.0.1:8000/students/${studentId}`
+            `https://skillgapplatform.onrender.com/students/${studentId}`
         );
 
         if (!response.ok) {
@@ -214,7 +214,7 @@ async function updateEmployment() {
 
     try {
         const response = await fetch(
-            `http://127.0.0.1:8000/students/${studentId}/employment`,
+            `https://skillgapplatform.onrender.com/students/${studentId}/employment`,
             {
                 method: "PUT",
                 headers: {
@@ -262,7 +262,7 @@ async function updateSkills() {
     try {
 
         const response = await fetch(
-            `http://127.0.0.1:8000/students/${studentId}/skills`,
+            `https://skillgapplatform.onrender.com/students/${studentId}/skills`,
             {
                 method: "PUT",
 
@@ -320,7 +320,7 @@ async function updateProfile() {
     try {
 
         const response = await fetch(
-            `http://127.0.0.1:8000/students/${studentId}/profile`,
+            `https://skillgapplatform.onrender.com/students/${studentId}/profile`,
             {
                 method: "PUT",
 

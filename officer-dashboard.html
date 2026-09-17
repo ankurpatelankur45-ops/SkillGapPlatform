@@ -147,7 +147,7 @@
 }
 async function loadOfficerStats() {
     try {
-        const response = await fetch("http://127.0.0.1:8000/officer/stats");
+        const response = await fetch("https://skillgapplatform.onrender.com/officer/stats");
 
         if (!response.ok) {
             throw new Error("Stats load failed");
@@ -177,7 +177,7 @@ loadOfficerStats();
 async function loadTrainingStats() {
     try {
         const response = await fetch(
-            "http://127.0.0.1:8000/officer/training-stats"
+            "https://skillgapplatform.onrender.com/officer/training-stats"
         );
 
         if (!response.ok) {
@@ -228,7 +228,7 @@ loadTrainingStats();
 async function loadImpactSummary() {
     try {
         const statsResponse = await fetch(
-            "http://127.0.0.1:8000/officer/stats"
+            "https://skillgapplatform.onrender.com/officer/stats"
         );
 
         const stats = await statsResponse.json();
@@ -253,7 +253,7 @@ loadImpactSummary();
 async function loadSkillGaps() {
     try {
         const response = await fetch(
-            "http://127.0.0.1:8000/officer/skill-gaps"
+            "https://skillgapplatform.onrender.com/officer/skill-gaps"
         );
 
         if (!response.ok) {
@@ -290,7 +290,7 @@ loadSkillGaps();
 async function loadRecommendations() {
     try {
         const response = await fetch(
-            "http://127.0.0.1:8000/officer/skill-recommendations"
+            "https://skillgapplatform.onrender.com/officer/skill-recommendations"
         );
 
         if (!response.ok) {
@@ -337,7 +337,7 @@ loadRecommendations();
 async function loadDistrictStats() {
     try {
         const response = await fetch(
-            "http://127.0.0.1:8000/officer/district-stats"
+            "https://skillgapplatform.onrender.com/officer/district-stats"
         );
 
         if (!response.ok) {
@@ -391,7 +391,7 @@ const districtRates = [];
 async function loadDistrictChart() {
     try {
         const response = await fetch(
-            "http://127.0.0.1:8000/officer/district-stats"
+            "https://skillgapplatform.onrender.com/officer/district-stats"
         );
 
         const data = await response.json();
@@ -439,7 +439,7 @@ loadDistrictChart();
         async function loadGovernmentSkillGaps() {
     try {
         const response = await fetch(
-            "http://127.0.0.1:8000/officer/government-skill-gaps"
+            "https://skillgapplatform.onrender.com/officer/government-skill-gaps"
         );
 
         const result = await response.json();
