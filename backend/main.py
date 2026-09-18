@@ -319,34 +319,76 @@ def get_skill_recommendations():
     recommendations = {}
 
     skill_map = {
-        "Hardware Devloper": [
+        "Hardware Developer": [
             "Embedded Systems",
             "Microcontrollers",
             "IoT"
         ],
+
+        "Web Development": [
+            "JavaScript",
+            "React",
+            "Backend Development"
+        ],
+
+        "HTML": [
+    "CSS",
+    "JavaScript",
+    "Responsive Web Design"
+],
+
+"CSS": [
+    "JavaScript",
+    "Responsive Web Design",
+    "Bootstrap"
+],
+
+"JavaScript": [
+    "React",
+    "Node.js",
+    "Backend Development"
+],
+
         "Web Developer": [
             "JavaScript",
             "React",
             "Backend Development"
         ],
+
         "Python Developer": [
             "Python",
             "SQL",
             "APIs"
         ],
+
         "Data Analyst": [
             "Python",
             "SQL",
             "Data Visualization"
         ],
+
         "AI ML": [
-    "Python",
-    "Machine Learning",
-    "Deep Learning"
-],
-       
+            "Python",
+            "Machine Learning",
+            "Deep Learning"
+        ]
     }
 
+    for row in rows:
+        skills = row[0]
+
+        if not skills:
+            continue
+
+        for skill in skills.split(","):
+            skill = skill.strip()
+
+            if skill in skill_map:
+                recommendations[skill] = skill_map[skill]
+
+    return {
+        "recommendations": recommendations
+    }
     for row in rows:
 
         skills = row[0]
