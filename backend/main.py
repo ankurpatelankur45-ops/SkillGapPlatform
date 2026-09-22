@@ -326,33 +326,43 @@ def get_skill_recommendations():
         ],
 
         "Web Development": [
+            "HTML",
+            "CSS",
+            "JavaScript",
+            "React",
+            "Backend Development"
+        ],
+
+        "Web Developer": [
+            "HTML",
+            "CSS",
             "JavaScript",
             "React",
             "Backend Development"
         ],
 
         "HTML": [
-    "CSS",
-    "JavaScript",
-    "Responsive Web Design"
-],
-
-"CSS": [
-    "JavaScript",
-    "Responsive Web Design",
-    "Bootstrap"
-],
-
-"JavaScript": [
-    "React",
-    "Node.js",
-    "Backend Development"
-],
-
-        "Web Developer": [
+            "CSS",
             "JavaScript",
+            "Responsive Web Design"
+        ],
+
+        "CSS": [
+            "JavaScript",
+            "Responsive Web Design",
+            "Bootstrap"
+        ],
+
+        "JavaScript": [
             "React",
+            "Node.js",
             "Backend Development"
+        ],
+
+        "Python": [
+            "SQL",
+            "APIs",
+            "Data Structures"
         ],
 
         "Python Developer": [
@@ -371,25 +381,22 @@ def get_skill_recommendations():
             "Python",
             "Machine Learning",
             "Deep Learning"
+        ],
+
+        "AI": [
+            "Python",
+            "Machine Learning",
+            "Deep Learning"
+        ],
+
+        "Machine Learning": [
+            "Python",
+            "Deep Learning",
+            "Data Science"
         ]
     }
 
     for row in rows:
-        skills = row[0]
-
-        if not skills:
-            continue
-
-        for skill in skills.split(","):
-            skill = skill.strip()
-
-            if skill in skill_map:
-                recommendations[skill] = skill_map[skill]
-
-    return {
-        "recommendations": recommendations
-    }
-    for row in rows:
 
         skills = row[0]
 
@@ -406,7 +413,7 @@ def get_skill_recommendations():
     return {
         "recommendations": recommendations
     }
-
+    
 
 @app.get("/officer/district-stats")
 def get_district_stats():
