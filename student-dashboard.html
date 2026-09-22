@@ -94,7 +94,7 @@
 
             <div class="status-card">
 
-                <h3>Web Development</h3>
+               <h3 id="trainingName">Loading...</h3>
 
                 <p>
     Status:
@@ -192,6 +192,7 @@ async function loadStudentProfile() {
         document.getElementById("studentEmail").textContent = student.email;
         document.getElementById("studentDistrict").textContent = student.district;
         document.getElementById("studentTraining").textContent = student.training;
+        document.getElementById("trainingName").textContent = student.training;
         document.getElementById("employmentStatus").value = student.employment_status;
         document.getElementById("skillsInput").value = student.skills || "";
         document.getElementById("trainingStatus").textContent =
