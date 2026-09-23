@@ -187,9 +187,9 @@ def get_officer_stats():
     employed_students = cursor.fetchone()[0]
 
     cursor.execute("""
-        SELECT COUNT(*) FROM students
-        WHERE employment_status = 'not-employed'
-    """)
+    SELECT COUNT(*) FROM students
+    WHERE employment_status = 'Not Employed'
+""")
     unemployed_students = cursor.fetchone()[0]
 
     if total_students > 0:
@@ -427,7 +427,7 @@ def get_district_stats():
             COUNT(*) AS total_students,
             SUM(
                 CASE
-                    WHEN employment_status = 'employed'
+                    WHEN employment_status IN ('employed', 'self-employed', 'apprenticeship')
                     THEN 1
                     ELSE 0
                 END
@@ -491,9 +491,9 @@ def get_training_stats():
             COUNT(*) AS total_students,
             SUM(
                 CASE
-                    WHEN employment_status = 'employed'
-                    THEN 1
-                    ELSE 0
+                    WHEN employment_status IN ('employed', 'self-employed', 'apprenticeship')
+                     THEN 1
+                     ELSE 0
                 END
             ) AS employed_students
         FROM students
